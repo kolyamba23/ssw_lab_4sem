@@ -17,7 +17,7 @@
  * @return vector with random values
  * @note if pass void like a type of template, will throw exception
  */
-    template <class T>
+template <class T>
 constexpr auto generate(const size_t N) {
     static_assert(!std::is_void<T>::value, "<E> Can't generate array of void");
     std::vector<T> res;
