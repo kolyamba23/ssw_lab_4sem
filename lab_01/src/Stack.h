@@ -6,12 +6,11 @@ class Stack
 {
 private:
 	unsigned int count { 0 };
-	unsigned int size { 1 };
-	
+	unsigned int size { 0 };
 public:
-	Stack();
+	Stack() = default;
 	~Stack();
-	int* buffer;
+	int* buffer{ nullptr };
 	void push(int t1);
 	int pop();
 	int peek();
@@ -111,8 +110,6 @@ public:
 	};
 };
 
-Stack::Stack()
-{};
 
 Stack::~Stack()
 {delete[] buffer;};
@@ -126,12 +123,16 @@ void Stack::vyvodelementa(int index)
 
 void Stack::push(int t1)
 {
+	if (count == 0 && size == 0)
+	{
+		size = size + 1;
+		buffer = new int[size];
+	}
+
 	if ((count + 1) > size)
 	{
-		if (count == 0)
-			buffer = new int[size];
 		int* Mass;
-		size = size + 5;
+		size = size + 2;
 		Mass = new int[size];
 		for (int i = 0; i < size; i++)
 			Mass[i] = buffer[i];
@@ -140,9 +141,8 @@ void Stack::push(int t1)
 		buffer = Mass;
 		count++;
 	}
-	else {
-		if (count == 0)
-			buffer = new int[size];
+	else 
+	{
 		buffer[count] = t1;
 		count++;
 	}
@@ -153,10 +153,11 @@ int Stack::pop()
 	if (count < 1)
 		throw std::range_error("Going beyond the vector");
 	int vozvrat = buffer[count - 1];
+	if (size != 1)
 	size--;//No cleanup of memory used
 	int* Mass;
 	Mass = new int[size];
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < count; i++)
 		Mass[i] = buffer[i];
 	delete[]buffer;
 	buffer = Mass;
@@ -197,9 +198,6 @@ void Stack::Delete_Negative_Element()
 			i--;
 		}
 	}
-
-	for (int i = 0; i < count; i++)
-		cout << buffer[i] << " ";
 };
 
 void Stack::Delete_IN_Diapazon(int start, int end)
@@ -222,7 +220,4 @@ void Stack::Delete_IN_Diapazon(int start, int end)
 			i--;
 		}
 	}
-
-	for (int i = 0; i < count; i++)
-		cout << buffer[i] << " ";
 };

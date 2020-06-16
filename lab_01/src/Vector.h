@@ -6,10 +6,10 @@ class Vector
 {
 private:
 	unsigned int count { 0 };
-	unsigned int size { 1 };
-	int* buffer;
+	unsigned int size { 0 };
+	int* buffer{ nullptr };
 public:
-	Vector();
+	Vector() = default;
 	~Vector();
 	void push(int t1);
 	int pop();
@@ -104,9 +104,6 @@ public:
 
 };
 
-Vector::Vector()
-{};
-
 Vector::~Vector()
 {delete[] buffer;};
 
@@ -119,12 +116,16 @@ void Vector::vyvodelementa(int index)
 
 void Vector::push(int t1)
 {
+	if (count == 0 && size == 0)
+	{
+		size = size + 1;
+		buffer = new int[size];
+	}
+
 	if ((count + 1) > size)
 	{
-		if (count == 0)
-			buffer = new int[size];
 		int* Mass;
-		size = size + 5;
+		size = size + 2;
 		Mass = new int[size];
 		for (int i = 0; i < size; i++)
 			Mass[i] = buffer[i];
@@ -133,9 +134,8 @@ void Vector::push(int t1)
 		buffer = Mass;
 		count++;
 	}
-	else {
-		if (count == 0)
-			buffer = new int[size];
+	else 
+	{
 		buffer[count] = t1;
 		count++;
 	}
@@ -147,10 +147,11 @@ int Vector::pop()
 	if (count < 1)
 		throw std::range_error("Going beyond the vector");
 	int vozvrat = buffer[count - 1];
+	if (size != 1)
 	size--;//No cleanup of memory used
 	int* Mass;
 	Mass = new int[size];
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < count; i++)
 		Mass[i] = buffer[i];
 	delete[]buffer;
 	buffer = Mass;
@@ -210,7 +211,7 @@ void Vector::Delete_IN_Diapazon(int start, int end)
 		{
 			for (int j = i; j < count; j++)
 			{
-				if (j = count)
+				if (j == count)
 				{
 					count--;
 				}
@@ -220,10 +221,6 @@ void Vector::Delete_IN_Diapazon(int start, int end)
 			i--;
 		}
 	}
-
-	for (int i = 0; i < count; i++)
-		cout << buffer[i] << " ";
-	cout << endl;
 };
 
 
