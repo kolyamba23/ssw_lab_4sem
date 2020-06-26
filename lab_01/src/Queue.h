@@ -7,10 +7,10 @@ class Queue
 private:
 	
 	unsigned int count { 0 };
-	unsigned int size { 1 };
-	int* buffer;
+	unsigned int size { 0 };
+	int* buffer{ nullptr };
 public:
-	Queue();
+	Queue() = default;
 	~Queue();
 	void push(int t1);
 	int pop();
@@ -103,9 +103,6 @@ public:
 	};
 };
 
-Queue::Queue()
-{};
-
 Queue::~Queue()
 {
 	delete[] buffer;
@@ -120,23 +117,25 @@ void Queue::vyvodelementa(int index)
 
 void Queue::push(int t1)
 {
+	if (count == 0 && size == 0)
+	{
+		size = size + 1;
+		buffer = new int[size];
+	}
 	if ((count + 1) > size)
 	{
-		if (count == 0)
-			buffer = new int[size];
 		int* Mass;
-		size = size + 5;
+		size = size + 2;
 		Mass = new int[size];
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < count; i++)
 			Mass[i] = buffer[i];
 		Mass[count] = t1;
 		delete[]buffer;
 		buffer = Mass;
 		count++;
 	}
-	else {
-		if (count == 0)
-			buffer = new int[size];
+	else 
+	{
 		buffer[count] = t1;
 		count++;
 	}
@@ -147,10 +146,11 @@ int Queue::pop()
 	if (count < 1)
 		throw std::range_error("Leaving the queue");
 	int ourelement = buffer[0];
+	if (size != 1)
 	size--;//No cleanup of memory used
 	int* Mass;
 	Mass = new int[size];
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < count; i++)
 		Mass[i] = buffer[i + 1];
 	delete[]buffer;
 	buffer = Mass;
@@ -190,9 +190,6 @@ void Queue::Delete_Negative_Element()
 			i--;
 		}
 	}
-
-	for (int i = 0; i < count; i++)
-		cout << buffer[i] << " ";
 };
 
 void Queue::Delete_IN_Diapazon(int start, int end)
@@ -215,7 +212,4 @@ void Queue::Delete_IN_Diapazon(int start, int end)
 			i--;
 		}
 	}
-
-	for (int i = 0; i < count; i++)
-		cout << buffer[i] << " ";
 };
