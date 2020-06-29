@@ -32,24 +32,26 @@ auto generate(const size_t N) {
     std::mt19937 mt(rd());
 
     if constexpr (std::is_arithmetic<T>::value) {
-	auto gen = [&]() {
-	    if constexpr (std::is_floating_point<T>::value) {
-	        std::uniform_real_distribution<T> dist(1, 100); // rand from 1 to 100
-    		for (size_t i = 0; i < N; i++) {
-    		    res.emplace_back(dist(mt));
-    		}
-	    } else {
-	        std::uniform_int_distribution<T> dist(1, 100);
-    		for (size_t i = 0; i < N; i++) {
-    		    res.emplace_back(dist(mt));
-    		}
-	    }
-	};
+        auto gen = [&]() {
+            if constexpr (std::is_floating_point<T>::value) {
+                std::uniform_real_distribution<T> dist(1, 1000); // rand from 1 to 100
+                for (size_t i = 0; i < N; i++) {
+                    res.emplace_back(dist(mt));
+                }
+            }
+            else {
+                std::uniform_int_distribution<T> dist(1, 1000);
+                for (size_t i = 0; i < N; i++) {
+                    res.emplace_back(dist(mt));
+                }
+            }
+        };
 
-	gen(); // lambda (non name) function
+        gen(); // lambda (non name) function
 
-    } else {
-    	std::throw_with_nested(std::runtime_error("<E> Can't work with unknown types"));
+    }
+    else {
+        std::throw_with_nested(std::runtime_error("<E> Can't work with unknown types"));
     }
 
     return res;
@@ -57,7 +59,7 @@ auto generate(const size_t N) {
 
 
 template<>
-auto generate<std::string> (const size_t N) { // template specialization for std::string
+auto generate<std::string>(const size_t N) { // template specialization for std::string
     std::vector<std::string> res;
 
     assert(N != 0);
@@ -69,7 +71,7 @@ auto generate<std::string> (const size_t N) { // template specialization for std
     std::uniform_int_distribution<int> dist(1, 100);
 
     for (size_t i = 0; i < N; i++) {
-       res.emplace_back(std::to_string(dist(mt)));
+        res.emplace_back(std::to_string(dist(mt)));
     }
 
     return res;
